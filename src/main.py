@@ -1,4 +1,5 @@
 from templates.templates import menu
+from models.usuario import Client
 
 def cancel_operation(prohibited):
     if prohibited.upper() == "C":
@@ -13,16 +14,40 @@ def execute_operation(operation, *args):
         return prohibited
 
 def deposit():
-    pass
+    deposit_template = f"""
+============= ÁREA DE DEPÓSITO =============
+Saldo atual da conta: R$ {usuario.view_balance()}
+
+Digite o valor do deposito:
+=>"""
+    
+    while True:
+        deposit_value = float(input(deposit_template))
+        if usuario.deposit_client(deposit_value):
+            break
+        else:
+            print("[ERROR] Não foi possível realizar o depósito, tente novamente.")
 
 def withdraw():
-    pass
+    withdraw_template = f"""
+============= ÁREA DE SAQUE =============
+Saldo atual da conta: R$ {usuario.view_balance()}
+
+Digite o valor do deposito:
+=>"""
+    
+    while True:
+        withdraw_value = float(input(withdraw_template))
+        if usuario.withdraw_client(withdraw_value):
+            break
+        else:
+            print("[ERROR] Não foi possível realizar o saque, tente novamente.")
 
 def extract():
-    pass
+    usuario.extract_client()
 
 def close_system():
-    pass
+    raise SystemExit("Sistema finalizado com sucesso.")
 
 sections = {
     "D": deposit,
@@ -32,6 +57,7 @@ sections = {
 }
 
 while True:
+    usuario = Client(0)
     options = input(menu).upper()
 
     action = sections.get(options, lambda: print("Operação não encontrada, tente novamente"))
