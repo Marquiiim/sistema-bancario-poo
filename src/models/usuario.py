@@ -2,7 +2,7 @@ from datetime import datetime
 
 class Client:
     def __init__(self, balance=0, withdraw_limit=1000):
-        self.balance = balance
+        self._balance = balance
         self.number_transactions = 0
         self.withdraw_limit = withdraw_limit
         self.extract = {"Depósitos": [], "Saques": []}
@@ -22,7 +22,7 @@ class Client:
             print("[ERROR] Valor inválido, tente novamente")
             return False
         else:
-            self.balance += value
+            self._balance += value
             self.number_transactions += 1
             self.extract["Depósitos"].append(f"R${value:.2f} | Dia: {date_str} às {time_str}")
             print(f"Depósito de R${value:.2f} realizado com sucesso.")
@@ -42,18 +42,18 @@ class Client:
         elif value > self.withdraw_limit:
             print("[ERROR] Você não pode sacar mais de R$1000,00")
             return False
-        elif value > self.balance:
+        elif value > self._balance:
             print("[ERROR] Saldo insuficiente para o saque, tente novamente.")
             return False
         else:
-            self.balance -= value
+            self._balance -= value
             self.number_transactions += 1
             self.extract["Saques"].append(f"R${value:.2f} | Dia: {date_str} às {time_str}")
             print(f"Saque de R${value:.2f} realizado com sucesso.")
             return True
 
     def view_balance(self):
-        return f"{self.balance:.2f}"
+        return f"{self._balance:.2f}"
 
     def extract_client(self):
         line_break = '\n    '
